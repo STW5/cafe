@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,9 +22,9 @@ public class BaseEntity {
 
     @CreatedDate
     @Column
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @LastModifiedDate
     @Column
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

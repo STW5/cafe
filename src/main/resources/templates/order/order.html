@@ -42,12 +42,7 @@
                 <div>총 가격: <span th:text="|${totalAmount}원|"></span></div>
             </td>
             <td>
-                <form th:action="@{/order/confirmQuick}" method="get">
-<!--                    <select name="paymentMethod" required>-->
-<!--                        <option th:each="paymentMethod : ${T(com.dnlab.coffee.order.common.PaymentMethod).values()}"-->
-<!--                                th:value="${paymentMethod}"-->
-<!--                                th:text="${paymentMethod.getDisplayName()}"></option>-->
-<!--                    </select>-->
+                <form th:action="@{/}" method="get">
                     <button type="submit">주문</button>
                 </form>
             </td>

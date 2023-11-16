@@ -13,6 +13,10 @@ import com.Cafe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -40,6 +44,38 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setOrderState(orderState);
+        order.setOrderedTime(LocalDateTime.now());
+        return orderRepository.save(order);
+    }
+
+    public List<Order> getAllOrders(Long userId) {
+        User user = userService.getUserById(userId);
+        if(user == null) return null;
+        return orderRepository.findByUser(user);
+    }
+
+
+    public Order confirmOrder(Long userId) {
+        User user = userService.getUserById(userId);
+        if(user == null) return null;
+        Optional<Order> optionalOrder = orderRepository.findOneByUser(user);
+        return processConfirmOrder(optionalOrder);
+    }
+
+    private Order processConfirmOrder(Optional<Order> optionalOrder) {
+        if (optionalOrder.isEmpty()) return null;
+        Order order = optionalOrder.get();
+        long totalAmount = 0L;
+        for (OrderMenu orderMenu : order.getOrderMenus()) {
+            totalAmount += orderMenu.getQuantity()*orderMenu.getMenu().getPrice();
+            if (!menuService.checkStockAvailable(orderMenu)) return null;
+        }
+        order.getOrderMenus().forEach(menuService::subIngredientStock);
+
+        order.setTotalAmount(totalAmount);
+        //order.setPaymentMethod(paymentMethod);
+        order.setOrderedTime(LocalDateTime.now());
+        order.setOrderState(OrderState.ORDER);
         return orderRepository.save(order);
     }
 }

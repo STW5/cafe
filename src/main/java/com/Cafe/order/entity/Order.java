@@ -4,9 +4,13 @@ import com.Cafe.config.BaseEntity;
 import com.Cafe.order.common.OrderState;
 import com.Cafe.user.entity.User;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -16,7 +20,8 @@ import java.sql.Date;
 @ToString
 @Table(name = "orders")
 public class Order extends BaseEntity {
-    private Date orderedTime;
+    @CreatedDate
+    private LocalDateTime orderedTime;
 
     private long totalAmount;
 
@@ -26,4 +31,7 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "order", orphanRemoval = true)
+    private List<OrderMenu> orderMenus = new LinkedList<>();
 }
