@@ -1,7 +1,7 @@
 package com.Cafe.user.controller;
 
-import com.Cafe.user.common.UserJoinForm;
-import com.Cafe.user.common.UserLoginForm;
+import com.Cafe.user.common.UserJoinDto;
+import com.Cafe.user.common.UserLoginDto;
 import com.Cafe.user.entity.User;
 import com.Cafe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(UserJoinForm userJoinForm, Model model){
-        User user = userService.join(userJoinForm);
+    public String join(UserJoinDto userJoinDto, Model model){
+        User user = userService.join(userJoinDto);
         if(user == null) return "user/joinForm";
         return "redirect:/";
     }
@@ -41,8 +41,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute UserLoginForm userLoginForm, HttpServletRequest httpServletRequest, Model model) {
-        User user = userService.login(userLoginForm);
+    public String login(@ModelAttribute UserLoginDto userLoginDto, HttpServletRequest httpServletRequest, Model model) {
+        User user = userService.login(userLoginDto);
         if (user == null) {
             log.info("유저가 없음");
             return "user/loginForm";

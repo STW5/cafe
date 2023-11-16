@@ -7,9 +7,7 @@
 <body>
 <!--헤더 프레그먼트-->
 <div th:insert="~{fragments :: headerFragment}"></div>
-
-<h2 style="display: inline; margin: 30px; text-align: center">상품목록</h2>
-<form th:action="@{/}" method="get" style="display: inline">
+<form th:action="@{/}" method="get" style="display: inline; float: right">
     <fieldset style="width: fit-content; display: inline">
         <select name="category">
             <option th:each="category : ${T(com.Cafe.menu.common.Category).values()}"
@@ -20,6 +18,7 @@
         <input type="submit" value="검색">
     </fieldset>
 </form>
+<h2 style="display: inline; margin: 30px; text-align: center">상품목록</h2>
 <div th:if="${!menuList.isEmpty()}">
     <table>
         <thead>

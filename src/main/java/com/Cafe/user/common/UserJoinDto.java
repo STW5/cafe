@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter @Setter
 @Builder
-public class UserJoinForm {
+public class UserJoinDto {
     private String username;
     private String password;
     private String name;

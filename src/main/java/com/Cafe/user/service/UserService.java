@@ -1,7 +1,7 @@
 package com.Cafe.user.service;
 
-import com.Cafe.user.common.UserJoinForm;
-import com.Cafe.user.common.UserLoginForm;
+import com.Cafe.user.common.UserJoinDto;
+import com.Cafe.user.common.UserLoginDto;
 import com.Cafe.user.entity.User;
 import com.Cafe.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,18 +13,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    public User join(UserJoinForm userJoinForm) {
-        if(userRepository.existsByUsername(userJoinForm.getUsername()))
+    public User join(UserJoinDto userJoinDto) {
+        if(userRepository.existsByUsername(userJoinDto.getUsername()))
             return null;
-        return userRepository.save(userJoinForm.toEntity());
+        return userRepository.save(userJoinDto.toEntity());
     }
 
 
-    public User login(UserLoginForm userLoginForm) {
-        Optional<User> optionalUser = userRepository.findByUsername(userLoginForm.getUsername());
+    public User login(UserLoginDto userLoginDto) {
+        Optional<User> optionalUser = userRepository.findByUsername(userLoginDto.getUsername());
         if (optionalUser.isEmpty()) return null;
         User user = optionalUser.get();
-        if (!user.getPassword().equals(userLoginForm.getPassword())) return null;
+        if (!user.getPassword().equals(userLoginDto.getPassword())) return null;
         return user;
+    }
+
+    public User getUserById(Long userId) {
+        if (userId == null) return null;
+        Optional<User> optionalUser = userRepository.findById(userId);
+        return optionalUser.orElse(null);
     }
 }
