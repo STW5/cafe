@@ -7,10 +7,7 @@ import com.Cafe.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,4 +36,30 @@ public class MenuController {
         menuService.createMenu(menuDto);
         return "redirect:/menu/manage";
     }
+
+    @PostMapping("/update")
+    public String updateMenu(@SessionAttribute(name = "loginUser", required = false) User loginUser, MenuDto menuDto, Long menuId){
+        if(loginUser==null)return "redirect:/user/login";
+        if(!loginUser.isAdmin()) return "redirect:/";
+        menuService.updateMenu(menuId, menuDto);
+        return "redirect:/menu/manage";
+    }
+
+    @PostMapping("/delete")
+    public String deleteMenu(@SessionAttribute(name = "loginUser", required = false) User loginUser, long menuId){
+        if(loginUser==null)return "redirect:/user/login";
+        if(!loginUser.isAdmin()) return "redirect:/";
+        menuService.deleteMenu(menuId);
+        return "redirect:/menu/manage";
+    }
+
+    @GetMapping
+    public String menuInfo(@RequestParam("menuId") Long menuId, @SessionAttribute(name = "loginUser", required = false) User loginUser, Model model){
+        Menu menu = menuService.getMenuById(menuId);
+        if(loginUser!=null)model.addAttribute(loginUser);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("menu", menu);
+        return "menu/info";
+    }
+
 }

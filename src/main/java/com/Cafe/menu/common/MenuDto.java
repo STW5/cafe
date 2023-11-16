@@ -10,6 +10,7 @@ public class MenuDto {
     private String name;
     private long price;
     private boolean special;
+    private Category category;
 
     // dto -> entity
     public Menu toEntity(){
@@ -18,6 +19,7 @@ public class MenuDto {
                 .price(price)
                 .active(true)
                 .special(special)
+                .category(category)
                 .build();
     }
 }

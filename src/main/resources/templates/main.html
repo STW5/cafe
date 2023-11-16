@@ -8,6 +8,7 @@
 <!--헤더 프레그먼트-->
 <div th:insert="~{fragments :: headerFragment}"></div>
 
+<h2 style="display: inline; margin: 30px; text-align: center">메인화면 입니다.</h2>
 <h2 style="display: inline; margin: 30px; text-align: center">상품목록</h2>
 <!--<form th:action="@{/}" method="get" style="display: inline">-->
 <!--    <fieldset style="width: fit-content; display: inline">-->
@@ -16,12 +17,11 @@
 <!--                    th:value="${category}"-->
 <!--                    th:text="${category.getDisplayName()}"></option>-->
 <!--        </select>-->
-<!--        <input type="text" name="search" th:value="${search}" placeholder="검색어 입력" style="width: 500px; height: 30px; border-style: none">-->
-<!--        <input type="submit" value="검색">-->
+<!--&lt;!&ndash;        <input type="text" name="search" th:value="${search}" placeholder="검색어 입력" style="width: 500px; height: 30px; border-style: none">&ndash;&gt;-->
+<!--&lt;!&ndash;        <input type="submit" value="검색">&ndash;&gt;-->
 <!--    </fieldset>-->
 <!--</form>-->
 <!--<div th:if="${!menuList.isEmpty()}">-->
-
 <!--    <table>-->
 <!--        <thead>-->
 <!--        <tr>-->
@@ -34,7 +34,7 @@
 <!--        </thead>-->
 <!--        <tbody>-->
 <!--        <tr th:each="menu : ${menuList}">-->
-<!--            <td><span th:if="${menu.isSpecial()}">[특별메뉴]</span></td>-->
+<!--&lt;!&ndash;            <td><span th:if="${menu.isSpecial()}">[특별메뉴]</span></td>&ndash;&gt;-->
 <!--            <td><a th:text="${menu.name}" th:href="@{/menu(menuId=${menu.id})}"></a></td>-->
 <!--            <td><span th:text="${menu.price}"></span></td>-->
 <!--            <td><span th:text="${menu.category.displayName}"></span></td>-->

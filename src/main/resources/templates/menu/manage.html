@@ -65,12 +65,12 @@
 <!--                            <option th:value="${true}" th:selected="${menu.special}">특별메뉴</option>-->
 <!--                        </select>-->
 <!--                    </td>-->
-<!--                    <td>-->
-<!--                        <input type="text" name="menuId" th:value="${menu.id}" hidden="hidden">-->
-<!--                        <button type="submit" formaction="/menu/update">수정</button>-->
-<!--                        <button type="submit" formaction="/menu/remove">삭제</button>-->
+                    <td>
+                        <input type="text" name="menuId" th:value="${menu.id}" hidden="hidden">
+                        <button type="submit" formaction="/menu/update">수정</button>
+                        <button type="submit" formaction="/menu/delete">삭제</button>
 <!--                        <a th:href="@{/menu/recipe(menuId = ${menu.id})}">레시피관리</a>-->
-<!--                    </td>-->
+                    </td>
                 </tr>
             </table>
         </form>

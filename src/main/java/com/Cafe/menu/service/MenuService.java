@@ -6,8 +6,10 @@ import com.Cafe.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,5 +24,25 @@ public class MenuService {
 
     public List<Menu> getAllMenus() {
         return menuRepository.findAllByActive(true);
+    }
+
+    @Transactional
+    public void updateMenu(Long menuId, MenuDto menuDto) {
+        Optional<Menu> optionalMenu = menuRepository.findById(menuId);
+        if(optionalMenu.isEmpty()) return;
+        Menu menu = optionalMenu.get();
+        menu.setName(menuDto.getName());
+        menu.setPrice(menuDto.getPrice());
+        menu.setCategory(menuDto.getCategory());
+        menu.setSpecial(menuDto.isSpecial());
+    }
+
+    @Transactional
+    public void deleteMenu(long menuId) {
+        menuRepository.findById(menuId).ifPresent(menu -> menu.setActive(false));
+    }
+
+    public Menu getMenuById(long menuId) {
+        return menuRepository.findById(menuId).orElse(null);
     }
 }
