@@ -18,7 +18,7 @@ public class UserJoinForm {
                 .password(password)
                 .name(name)
                 .active(true)
-                .admin(false)
+                .admin(true)
                 .build();
     }
 }

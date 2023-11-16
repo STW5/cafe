@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cafe</title>
+</head>
+<body>
+<!--헤더 프레그먼트-->
+<div th:insert="~{fragments :: headerFragment}"></div>
+
+<h3>메뉴목록</h3>
+
+<ul>
+    <li>
+        <form method="post">
+            <table>
+                <tr>
+                    <td>이름: <input type="text" name="name"></td>
+                    <td>가격: <input type="number" name="price"></td>
+                    <td>카테고리:
+                        <select name="category">
+                            <option th:each="category : ${T(com.Cafe.menu.common.Category).values()}"
+                                    th:value="${category}"
+                                    th:if="${!category.equals(T(com.Cafe.menu.common.Category).ALL)}"
+                                    th:text="${category.getDisplayName()}"></option>
+                        </select>
+                    </td>
+                    <!--                    <td>스페셜메뉴 여부: <input type="checkbox" name="special"></td>-->
+<!--                    <td>스페셜메뉴 여부:-->
+<!--                        <select name="special">-->
+<!--                            <option th:value="${false}" selected>선택안함</option>-->
+<!--                            <option th:value="${true}">특별메뉴</option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+                    <td>
+                        <button type="submit" formaction="/menu/add">메뉴추가</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </li>
+    <li th:each="menu : ${menuList}">
+        <form method="post">
+            <table>
+                <tr>
+                    <td>이름: <input type="text" name="name" id="name" th:value="${menu.name}"></td>
+                    <td>가격: <input type="number" name="price" id="price" th:value="${menu.price}"></td>
+                    <td>카테고리:
+                        <select name="category">
+                            <option th:each="category : ${T(com.Cafe.menu.common.Category).values()}"
+                                    th:value="${category}"
+                                    th:if="${!category.equals(T(com.Cafe.menu.common.Category).ALL)}"
+                                    th:text="${category.getDisplayName()}"
+                                    th:selected="${category.equals(menu.category)}"></option>
+                        </select>
+                    </td>
+                    <!--                    <td>-->
+                    <!--                        스페셜메뉴 여부:-->
+                    <!--                        <input th:if="${menu.special}" type="checkbox" name="special" checked>-->
+                    <!--                        <input th:unless="${menu.special}" type="checkbox" name="special">-->
+                    <!--                    </td>-->
+<!--                    <td>스페셜메뉴 여부:-->
+<!--                        <select name="special">-->
+<!--                            <option th:value="${false}" th:selected="${!menu.special}">선택안함</option>-->
+<!--                            <option th:value="${true}" th:selected="${menu.special}">특별메뉴</option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <input type="text" name="menuId" th:value="${menu.id}" hidden="hidden">-->
+<!--                        <button type="submit" formaction="/menu/update">수정</button>-->
+<!--                        <button type="submit" formaction="/menu/remove">삭제</button>-->
+<!--                        <a th:href="@{/menu/recipe(menuId = ${menu.id})}">레시피관리</a>-->
+<!--                    </td>-->
+                </tr>
+            </table>
+        </form>
+    </li>
+</ul>

@@ -1,11 +1,10 @@
 package com.Cafe.menu.entity;
 
 import com.Cafe.config.BaseEntity;
+import com.Cafe.menu.common.Category;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -23,4 +22,8 @@ public class Menu extends BaseEntity {
     private boolean active;
     @Column
     private boolean special;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category")
+    private Category category;
 }

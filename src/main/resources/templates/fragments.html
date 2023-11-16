@@ -5,7 +5,8 @@
     <h1 th:onclick="|location.href='@{/}'|" style="cursor:pointer;">Cafe</h1>
     <th:block th:if="${loginUser!=null}">
         <div>
-<!--            <a th:href="@{/user/logout}">로그아웃</a>-->
+            <span th:text="|안녕하세요 이름: ${loginUser.name}|">안녕하세요 이름</span>
+            <a th:href="@{/user/logout}">로그아웃</a>
 <!--            <a th:href="@{/order/orderMenu}">장바구니</a>-->
 <!--            <a th:href="@{/order/list}">내 주문</a>-->
 <!--            <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}">메뉴관리</a>-->
