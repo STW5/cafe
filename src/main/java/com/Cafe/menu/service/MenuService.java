@@ -1,5 +1,6 @@
 package com.Cafe.menu.service;
 
+import com.Cafe.menu.common.Category;
 import com.Cafe.menu.common.MenuDto;
 import com.Cafe.menu.entity.Menu;
 import com.Cafe.menu.repository.MenuRepository;
@@ -44,5 +45,17 @@ public class MenuService {
 
     public Menu getMenuById(long menuId) {
         return menuRepository.findById(menuId).orElse(null);
+    }
+
+    public List<Menu> getAllSearchedMenu(String keyword, Category category){
+        if ((keyword == null || keyword.isEmpty()) && (category == null || category == Category.ALL)) {
+            return menuRepository.findAllByActive(true);
+        } else if(keyword!=null && (category!=null && category != Category.ALL)){
+            return menuRepository.findAllByNameContainingAndCategoryAndActive(keyword, category, true);
+        } else if (keyword!=null){
+            return menuRepository.findAllByNameContainingAndActive(keyword, true);
+        }else {
+            return menuRepository.findAllByCategoryAndActive(category, true);
+        }
     }
 }

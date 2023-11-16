@@ -24,6 +24,7 @@ public class MainController {
 
     @GetMapping("/")
     public String main(@SessionAttribute(name = "loginUser", required = false) User loginUser,
+                       @RequestParam(value = "search", required = false) String search,
                        @RequestParam(value = "category", required = false) Category category,
                        Model model, HttpSession httpSession) {
         if(loginUser != null){
@@ -31,8 +32,8 @@ public class MainController {
             //orderService.createPrepairingOrder(loginUser.getId());
         }
 
-//        List<Menu> menuList = menuService.getAllSearchedMenu(search, category);
-//        model.addAttribute("menuList", menuList);
+        List<Menu> menuList = menuService.getAllSearchedMenu(search, category);
+        model.addAttribute("menuList", menuList);
         model.addAttribute("category", category);
 
         return "main";
