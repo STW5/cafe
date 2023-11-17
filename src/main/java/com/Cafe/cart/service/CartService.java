@@ -13,6 +13,7 @@ import com.Cafe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,30 +26,46 @@ public class CartService {
     private final MenuService menuService;
 
 
-    public CartMenu addCart(CartMenuDto cartMenuDto) {
+    public void addCart(CartMenuDto cartMenuDto) {
         User user = userService.getUserById(cartMenuDto.getUserId());
-        if (user == null) return null;
+        //if (user == null) return null;
         Menu menu = menuService.getMenuById(cartMenuDto.getMenuId());
-        if (menu == null) return null;
+        //if (menu == null) return null;
         Cart cart = cartRepository.findByUserId(user.getId());
-        if (cart == null) return null;
+        if (cart == null){
+            cart = createCart(user);
+            cartRepository.save(cart);
+        }
         CartMenu cartMenu = cartMenuRepository.findByCartIdAndMenuId(cart.getId(), menu.getId());
 
-        cartMenu = createCartItem(cart, menu, cartMenuDto.getQuantity());
-        return cartMenuRepository.save(cartMenu);
+        if (cartMenu == null) {
+            cartMenu = cartMenu.createCartMenu(cart, menu, cartMenuDto.getQuantity());
+            cartMenuRepository.save(cartMenu);
+        } else {
+            CartMenu update = cartMenu;
+            update.setCart(cartMenu.getCart());
+            update.setMenu(cartMenu.getMenu());
+            update.addQuantity(cartMenuDto.getQuantity());
+            update.setQuantity(update.getQuantity());
+            cartMenuRepository.save(update);
+        }
+
+
     }
 
-    private CartMenu createCartItem(Cart cart, Menu menu, int quantity) {
-        CartMenu cartMenu = new CartMenu();
-        cartMenu.setCart(cart);
-        cartMenu.setMenu(menu);
-        cartMenu.setQuantity(quantity);
-        return cartMenu;
+    private Cart createCart(User user) {
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cart.setCreateTime(LocalDateTime.now());
+        return cartRepository.save(cart);
     }
 
-    public List<Cart> getAllCartList(Long userId) {
+
+    public List<CartMenu> getAllCartList(Long userId) {
         User user = userService.getUserById(userId);
         if(user == null) return null;
-        return cartRepository.findByUser(user);
+
+        return cartMenuRepository.findByCartId(userId);
     }
+
 }

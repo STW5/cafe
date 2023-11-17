@@ -4,7 +4,6 @@ import com.Cafe.cart.common.CartMenuDto;
 import com.Cafe.cart.entity.Cart;
 import com.Cafe.cart.entity.CartMenu;
 import com.Cafe.cart.service.CartService;
-import com.Cafe.order.common.OrderMenuDto;
 import com.Cafe.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,19 +21,21 @@ public class CartController {
 
     @PostMapping("/add")
     public String addCart(@SessionAttribute(name = "loginUser", required = false) User loginUser,
-                          @RequestBody CartMenuDto cartMenuDto,
+                          @ModelAttribute CartMenuDto cartMenuDto,
                         HttpServletRequest httpServletRequest) {
         if(loginUser==null) return "redirect:/user/login";
-        CartMenu cartMenu = cartService.addCart(cartMenuDto.setUserId(loginUser.getId()));
+        cartService.addCart(cartMenuDto.setUserId(loginUser.getId()));
         return "redirect:/";
     }
 
     @GetMapping("/list")
     public String cartList(@SessionAttribute(name = "loginUser", required = false) User loginUser, Model model) {
         if(loginUser==null) return "redirect:/user/login";
-        List<Cart> cartList = cartService.getAllCartList(loginUser.getId());
-        model.addAttribute("cartList", cartList);
+
+        List<CartMenu> cartMenuList = cartService.getAllCartList(loginUser.getId());
+
+        model.addAttribute("cartMenuList", cartMenuList);
         model.addAttribute("loginUser", loginUser);
-        return "";
+        return "order/cartList";
     }
 }

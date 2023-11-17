@@ -19,7 +19,7 @@
     <span th:if="${loginUser!=null}">수량 : </span>
     <input th:if="${loginUser!=null}" type="number" name="quantity" id="quantity" value="1" style="width: 50px">
     <br/><br/>
-<!--    <button th:if="${loginUser!=null}" type="submit" formaction="/order/add">장바구니 담기</button>-->
+    <button th:if="${loginUser!=null}" type="submit" formaction="/cart/add">장바구니 담기</button>
     <button th:if="${loginUser!=null}" type="submit" formaction="/order/order">주문하기</button>
 </form>
 </body>

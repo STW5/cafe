@@ -4,10 +4,9 @@ import com.Cafe.config.BaseEntity;
 import com.Cafe.user.entity.User;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -23,4 +22,7 @@ public class Cart extends BaseEntity {
     private User user;
 
 
+
+    @OneToMany(mappedBy = "cart", orphanRemoval = true)
+    private List<CartMenu> cartMenus = new LinkedList<>();
 }

@@ -2,7 +2,6 @@ package com.Cafe.cart.entity;
 
 import com.Cafe.config.BaseEntity;
 import com.Cafe.menu.entity.Menu;
-import com.Cafe.order.entity.Order;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -29,5 +28,17 @@ public class CartMenu extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private Menu menu;
+
+    public static CartMenu createCartMenu(Cart cart, Menu menu, int quantity) {
+        CartMenu cartMenu = new CartMenu();
+        cartMenu.setCart(cart);
+        cartMenu.setMenu(menu);
+        cartMenu.setQuantity(quantity);
+        return cartMenu;
+    }
+
+    public void addQuantity(int quantity) {
+        this.quantity += quantity;
+    }
 }
 

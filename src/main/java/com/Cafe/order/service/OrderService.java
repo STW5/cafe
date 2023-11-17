@@ -32,7 +32,7 @@ public class OrderService {
         Menu menu = menuService.getMenuById(orderMenuDto.getMenuId());
         if (menu == null) return null;
 
-        Order order = createOrder(user, OrderState.ORDER);
+        Order order = createOrder(user, OrderState.PREPARING);
         OrderMenu orderMenu = OrderMenu.builder()
                 .menu(menu)
                 .order(order)
