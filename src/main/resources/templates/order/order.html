@@ -43,6 +43,11 @@
             </td>
             <td>
                 <form th:action="@{/order/confirm}" method="get">
+                    <select name="paymentMethod" required>
+                        <option th:each="paymentMethod : ${T(com.Cafe.order.common.PaymentMethod).values()}"
+                                th:value="${paymentMethod}"
+                                th:text="${paymentMethod.getDisplayName()}"></option>
+                    </select>
                     <button type="submit">주문</button>
                 </form>
             </td>

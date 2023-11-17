@@ -1,6 +1,7 @@
 package com.Cafe.order.controller;
 
 import com.Cafe.order.common.OrderMenuDto;
+import com.Cafe.order.common.PaymentMethod;
 import com.Cafe.order.entity.Order;
 import com.Cafe.order.entity.OrderMenu;
 import com.Cafe.order.service.OrderService;
@@ -34,9 +35,9 @@ public class OrderController {
     }
 
     @GetMapping("/confirm")
-    public String confirmOrder(@SessionAttribute(name = "loginUser", required = false) User loginUser){
+    public String confirmOrder(@SessionAttribute(name = "loginUser", required = false) User loginUser, PaymentMethod paymentMethod){
         if (loginUser == null) return "redirect:/user/login";
-        orderService.confirmOrder(loginUser.getId());
+        orderService.confirmOrder(loginUser.getId(), paymentMethod);
         return "redirect:/";
     }
 

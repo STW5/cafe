@@ -4,6 +4,7 @@ import com.Cafe.menu.entity.Menu;
 import com.Cafe.menu.service.MenuService;
 import com.Cafe.order.common.OrderMenuDto;
 import com.Cafe.order.common.OrderState;
+import com.Cafe.order.common.PaymentMethod;
 import com.Cafe.order.entity.Order;
 import com.Cafe.order.entity.OrderMenu;
 import com.Cafe.order.repository.OrderMenuRepository;
@@ -55,14 +56,14 @@ public class OrderService {
     }
 
 
-    public Order confirmOrder(Long userId) {
+    public Order confirmOrder(Long userId, PaymentMethod paymentMethod) {
         User user = userService.getUserById(userId);
         if(user == null) return null;
         Optional<Order> optionalOrder = orderRepository.findOneByUserAndOrderState(user, OrderState.PREPARING);
-        return processConfirmOrder(optionalOrder);
+        return processConfirmOrder(paymentMethod, optionalOrder);
     }
 
-    private Order processConfirmOrder(Optional<Order> optionalOrder) {
+    private Order processConfirmOrder(PaymentMethod paymentMethod, Optional<Order> optionalOrder) {
         if (optionalOrder.isEmpty()) return null;
         Order order = optionalOrder.get();
         long totalAmount = 0L;
@@ -73,7 +74,7 @@ public class OrderService {
         //order.getOrderMenus().forEach(menuService::subIngredientStock);
 
         order.setTotalAmount(totalAmount);
-        //order.setPaymentMethod(paymentMethod);
+        order.setPaymentMethod(paymentMethod);
         order.setOrderedTime(LocalDateTime.now());
         order.setOrderState(OrderState.ORDER);
         return orderRepository.save(order);

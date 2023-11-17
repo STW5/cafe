@@ -2,6 +2,7 @@ package com.Cafe.order.entity;
 
 import com.Cafe.config.BaseEntity;
 import com.Cafe.order.common.OrderState;
+import com.Cafe.order.common.PaymentMethod;
 import com.Cafe.user.entity.User;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,6 +28,9 @@ public class Order extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private OrderState orderState;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
