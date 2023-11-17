@@ -13,5 +13,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     public List<Order> findByUser(User user);
 
 
-    public Optional<Order> findOneByUserAndOrderState(User user, OrderState orderState);
+    Optional<Order> findOneByUserAndOrderState(User user, OrderState orderState);
 }
