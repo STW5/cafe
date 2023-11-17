@@ -42,7 +42,7 @@
                 <div>총 가격: <span th:text="|${totalAmount}원|"></span></div>
             </td>
             <td>
-                <form th:action="@{/}" method="get">
+                <form th:action="@{/order/confirm}" method="get">
                     <button type="submit">주문</button>
                 </form>
             </td>

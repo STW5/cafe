@@ -43,7 +43,7 @@ public class OrderService {
     private Order createOrder(User user, OrderState orderState) {
         Order order = new Order();
         order.setUser(user);
-        order.setOrderState(orderState);
+        order.setOrderState(orderState.PREPARING);
         order.setOrderedTime(LocalDateTime.now());
         return orderRepository.save(order);
     }
@@ -58,7 +58,7 @@ public class OrderService {
     public Order confirmOrder(Long userId) {
         User user = userService.getUserById(userId);
         if(user == null) return null;
-        Optional<Order> optionalOrder = orderRepository.findOneByUser(user);
+        Optional<Order> optionalOrder = orderRepository.findOneByUserAndOrderState(user, OrderState.PREPARING);
         return processConfirmOrder(optionalOrder);
     }
 
@@ -68,9 +68,9 @@ public class OrderService {
         long totalAmount = 0L;
         for (OrderMenu orderMenu : order.getOrderMenus()) {
             totalAmount += orderMenu.getQuantity()*orderMenu.getMenu().getPrice();
-            if (!menuService.checkStockAvailable(orderMenu)) return null;
+            //if (!menuService.checkStockAvailable(orderMenu)) return null;
         }
-        order.getOrderMenus().forEach(menuService::subIngredientStock);
+        //order.getOrderMenus().forEach(menuService::subIngredientStock);
 
         order.setTotalAmount(totalAmount);
         //order.setPaymentMethod(paymentMethod);
