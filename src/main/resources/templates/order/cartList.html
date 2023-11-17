@@ -24,9 +24,43 @@
             <td th:text="${cartMenu.menu.name}"></td>
             <td th:text="${cartMenu.menu.price}"></td>
             <td th:text="${cartMenu.menu.category.displayName}"></td>
-            <td th:text="${cartMenu.quantity}"></td>
+            <td>
+                <span th:text="| ${cartMenu.menu.price}원 x ${cartMenu.quantity} |"></span><br>
+                <span th:text="| = ${cartMenu.menu.price*cartMenu.quantity}원 |"></span>
+            </td>
+            <td>
+                <form th:action="@{/cart/update}" method="post">
+                    <input type="hidden" th:value="${cartMenu.id}" name="cartMenuId">
+                    <input type="number" th:value="${cartMenu.quantity}" name="quantity" style="width: 40px">
+                    <button type="submit">수량 변경</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/cart/delete}" method="post">
+                    <input type="hidden" id="deletecartmenuId" name="cartMenuId" th:value="${cartMenu.id}">
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
         </tr>
         </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+            <td>
+                <div>총 가격: <span th:text="|${totalAmount}원|"></span></div>
+            </td>
+            <td>
+                <form th:action="@{/order/confirm}" method="get">
+                    <select name="paymentMethod" required>
+                        <option th:each="paymentMethod : ${T(com.Cafe.order.common.PaymentMethod).values()}"
+                                th:value="${paymentMethod}"
+                                th:text="${paymentMethod.getDisplayName()}"></option>
+                    </select>
+                    <button type="submit">주문</button>
+                </form>
+            </td>
+        </tr>
+        </tfoot>
     </table>
 </div>
 <div th:unless="${!cartMenuList.isEmpty()}">

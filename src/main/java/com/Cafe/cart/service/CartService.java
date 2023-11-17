@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,4 +69,22 @@ public class CartService {
         return cartMenuRepository.findByCartId(userId);
     }
 
+    public void removeCartMenu(long cartMenuId) {
+        Optional<CartMenu> optionalCartMenu = cartMenuRepository.findById(cartMenuId);
+        if(optionalCartMenu.isEmpty()) return;
+        CartMenu cartMenu = optionalCartMenu.get();
+        cartMenuRepository.delete(cartMenu);
+    }
+
+    public CartMenu changeQuantity(long cartMenuId, int quantity) {
+        Optional<CartMenu> optionalCartMenu = cartMenuRepository.findById(cartMenuId);
+        if(optionalCartMenu.isEmpty()) return null;
+        if(quantity<=0){
+            removeCartMenu(cartMenuId);
+            return null;
+        }
+        CartMenu cartMenu = optionalCartMenu.get();
+        cartMenu.setQuantity(quantity);
+        return cartMenuRepository.save(cartMenu);
+    }
 }

@@ -8,7 +8,6 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,4 +37,6 @@ public class Order extends BaseEntity {
 
     @OneToMany(mappedBy = "order", orphanRemoval = true)
     private List<OrderMenu> orderMenus = new LinkedList<>();
+
+
 }

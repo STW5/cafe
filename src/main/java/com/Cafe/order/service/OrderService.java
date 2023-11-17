@@ -1,5 +1,6 @@
 package com.Cafe.order.service;
 
+import com.Cafe.cart.entity.CartMenu;
 import com.Cafe.menu.entity.Menu;
 import com.Cafe.menu.service.MenuService;
 import com.Cafe.order.common.OrderMenuDto;
@@ -10,6 +11,7 @@ import com.Cafe.order.entity.OrderMenu;
 import com.Cafe.order.repository.OrderMenuRepository;
 import com.Cafe.order.repository.OrderRepository;
 import com.Cafe.user.entity.User;
+import com.Cafe.user.repository.UserRepository;
 import com.Cafe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.Optional;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMenuRepository orderMenuRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
     private final MenuService menuService;
 
@@ -78,5 +81,30 @@ public class OrderService {
         order.setOrderedTime(LocalDateTime.now());
         order.setOrderState(OrderState.ORDER);
         return orderRepository.save(order);
+    }
+
+
+    public void createCartOrder(Long userId, List<CartMenu> cartMenuList){
+        Optional<User> userOptional = userRepository.findById(userId);
+        User user = userOptional.get();
+
+
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderState(OrderState.PREPARING);
+        // 주문 저장
+        orderRepository.save(order);
+
+        // 장바구니 항목을 주문 항목으로 변환하고 저장
+        for(CartMenu cartMenu : cartMenuList){
+            OrderMenu orderMenu = new OrderMenu();
+            orderMenu.setOrder(order);
+            orderMenu.setMenu(cartMenu.getMenu());
+            orderMenu.setQuantity(cartMenu.getQuantity());
+
+            // 주문 항목 저장
+            orderMenuRepository.save(orderMenu);
+        }
     }
 }
