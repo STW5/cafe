@@ -16,7 +16,9 @@ import com.Cafe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,8 +90,6 @@ public class OrderService {
         Optional<User> userOptional = userRepository.findById(userId);
         User user = userOptional.get();
 
-
-
         Order order = new Order();
         order.setUser(user);
         order.setOrderState(OrderState.PREPARING);
@@ -107,4 +107,40 @@ public class OrderService {
             orderMenuRepository.save(orderMenu);
         }
     }
+
+    public List<Order> confirmCartOrder(Long userId, PaymentMethod paymentMethod) {
+        User user = userService.getUserById(userId);
+        if(user == null) return null;
+        List<Order> orderList = orderRepository.findByUserAndOrderState(user, OrderState.PREPARING);
+        return processConfirmCartOrder(paymentMethod, orderList);
+    }
+
+    private List<Order> processConfirmCartOrder(PaymentMethod paymentMethod, List<Order> orderList) {
+        if (orderList.isEmpty()) return null;
+        List<Order> confirmedOrders = new ArrayList<>();
+        for (Order order : orderList) {
+            long totalAmount = 0L;
+            // 주문 항목을 다시 불러와서 새로운 총 금액을 계산
+            List<OrderMenu> orderMenus = orderMenuRepository.findByOrder(order);
+            for (OrderMenu orderMenu : orderMenus) {
+                totalAmount += orderMenu.getQuantity()*orderMenu.getMenu().getPrice();
+            }
+
+            order.setTotalAmount(totalAmount);
+            order.setPaymentMethod(paymentMethod);
+            order.setOrderedTime(LocalDateTime.now());
+            order.setOrderState(OrderState.ORDER);
+            orderRepository.save(order);
+        }
+
+        return null;
+    }
+
+
+//    @Transactional
+//    public void processOrder(Long userId, List<CartMenu> cartMenuList, PaymentMethod paymentMethod) {
+//        createCartOrder(userId, cartMenuList);
+//        confirmCartOrder(userId, paymentMethod);
+//    }
+
 }

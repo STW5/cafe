@@ -50,7 +50,7 @@
                 <div>총 가격: <span th:text="|${totalAmount}원|"></span></div>
             </td>
             <td>
-                <form th:action="@{/order/confirm}" method="get">
+                <form th:action="@{/cart/order}" method="get">
                     <select name="paymentMethod" required>
                         <option th:each="paymentMethod : ${T(com.Cafe.order.common.PaymentMethod).values()}"
                                 th:value="${paymentMethod}"

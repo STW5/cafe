@@ -4,6 +4,7 @@ import com.Cafe.cart.common.CartMenuDto;
 import com.Cafe.cart.entity.Cart;
 import com.Cafe.cart.entity.CartMenu;
 import com.Cafe.cart.service.CartService;
+import com.Cafe.order.common.PaymentMethod;
 import com.Cafe.order.service.OrderService;
 import com.Cafe.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,13 @@ public class CartController {
         if(loginUser==null) return "redirect:/user/login";
 
         List<CartMenu> cartMenuList = cartService.getAllCartList(loginUser.getId());
+
+
         long totalAmount = 0L;
         for(CartMenu cartMenu : cartMenuList){
             totalAmount += (long) cartMenu.getQuantity() * cartMenu.getMenu().getPrice();
         }
+
 
         model.addAttribute("cartMenuList", cartMenuList);
         model.addAttribute("loginUser", loginUser);
@@ -60,8 +64,8 @@ public class CartController {
         return "redirect:/cart/list";
     }
 
-    @PostMapping("/order")
-    public String orderCartMenu(@SessionAttribute(name = "loginUser", required = false) User loginUser){
+    @GetMapping("/order")
+    public String orderCartMenu(@SessionAttribute(name = "loginUser", required = false) User loginUser, PaymentMethod paymentMethod){
         if(loginUser == null) return "redirect:/user/login";
 
         // 사용자의 장바구니 항목 가져오기
@@ -71,6 +75,7 @@ public class CartController {
         if(!cartMenuList.isEmpty()){
             // 주문 서비스에서 주문 처리하기
             orderService.createCartOrder(loginUser.getId(), cartMenuList);
+            orderService.confirmCartOrder(loginUser.getId(), paymentMethod);
 
             // 주문이 성공적으로 이루어진 후 장바구니 비우기
             for(CartMenu cartMenu : cartMenuList){
@@ -78,7 +83,8 @@ public class CartController {
             }
         }
 
-        return "redirect:/order/list";
+
+        return "redirect:/";
     }
 
 
