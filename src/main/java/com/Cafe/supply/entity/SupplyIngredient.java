@@ -1,4 +1,4 @@
-package com.Cafe.supplier.entity;
+package com.Cafe.supply.entity;
 
 import com.Cafe.config.BaseEntity;
 import com.Cafe.menu.entity.Ingredient;

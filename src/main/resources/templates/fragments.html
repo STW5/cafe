@@ -10,7 +10,7 @@
             <a th:href="@{/cart/list}">장바구니</a>
             <a th:href="@{/order/list}">내 주문</a>
             <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}">메뉴관리</a>
-<!--            <a th:if="${loginUser.admin == true}" th:href="@{/supply/supplier}">공급관리</a>-->
+            <a th:if="${loginUser.admin == true}" th:href="@{/supply/supplier}">공급관리</a>
         </div>
     </th:block>
     <th:block th:unless="${loginUser!=null}">

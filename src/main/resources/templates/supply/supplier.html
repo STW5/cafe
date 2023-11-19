@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공급업체 목록</title>
+</head>
+<body>
+<!--헤더 프레그먼트-->
+<div th:insert="~{fragments :: headerFragment}"></div>
+
+<h3>공급업체 목록</h3>
+
+<ul>
+    <li>
+        <form method="post">
+            <table>
+                <tr>
+                    <td>이름: <input type="text" name="name"></td>
+                    <td>주소: <input type="text" id="address" name="address"></td>
+                    <td>
+                        <button type="submit" formaction="/supply/add">공급업체 추가</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </li>
+    <li th:each="supplier : ${supplierList}">
+        <form method="post">
+            <table>
+                <tr>
+                    <td>이름: <input type="text" name="name" id="name" th:value="${supplier.name}"></td>
+                    <td>주소: <input type="text" name="address" th:value="${supplier.address}"></td>
+                    <td>
+                        <input type="text" name="supplierId" th:value="${supplier.id}" hidden="hidden">
+                        <button type="submit" formaction="/supply/update">수정</button>
+                        <button type="submit" formaction="/supply/remove">삭제</button>
+                        <a th:href="@{/supply(supplierId = ${supplier.id})}">공급</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </li>
+</ul>
+
+<h3>공급 기록</h3>
+
+<ul>
+    <li th:each="supply : ${supplyList}">
+        <span th:text="|날짜: ${supply.suppliedDate}|"></span>
+        <span th:text="|공급업체: ${supply.supplier.name}|"></span>
+        <table>
+            <tr>
+                <th>공급재료</th>
+                <th>공급량</th>
+                <th>단가</th>
+            </tr>
+            <tr th:each="supplyIngredient : ${supply.supplyIngredientList}">
+                <td><span th:text="${supplyIngredient.ingredient.name}"></span></td>
+                <td><span th:text="${supplyIngredient.amount}"></span></td>
+                <td><span th:text="${supplyIngredient.price}"></span></td>
+            </tr>
+        </table>
+    </li>
+</ul>
+
+</body>
+</html>

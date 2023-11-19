@@ -1,6 +1,6 @@
-package com.Cafe.supplier.common;
+package com.Cafe.supply.common;
 
-import com.Cafe.supplier.entity.Supplier;
+import com.Cafe.supply.entity.Supplier;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,12 +8,12 @@ import lombok.Data;
 @Builder
 public class SupplierDto {
     private String name;
-    private String adress;
+    private String address;
 
     public Supplier toEntity(){
         return Supplier.builder()
                 .name(name)
-                .address(adress)
+                .address(address)
                 .active(true)
                 .build();
     }

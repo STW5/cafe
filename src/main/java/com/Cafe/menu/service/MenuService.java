@@ -128,4 +128,8 @@ public class MenuService {
             ingredient.setStock(ingredient.getStock() - recipe.getRequiredAmount() * orderMenu.getQuantity());
         }
     }
+
+    public void addIngredientStock(Ingredient ingredient, long stock) {
+        ingredient.setStock(ingredient.getStock() + stock);
+    }
 }

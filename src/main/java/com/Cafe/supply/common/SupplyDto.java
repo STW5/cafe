@@ -1,4 +1,4 @@
-package com.Cafe.supplier.common;
+package com.Cafe.supply.common;
 
 import lombok.Data;
 
