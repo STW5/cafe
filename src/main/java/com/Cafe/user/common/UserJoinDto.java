@@ -11,12 +11,14 @@ public class UserJoinDto {
     private String username;
     private String password;
     private String name;
+    private long phone;
 
     public User toEntity(){
         return User.builder()
                 .username(username)
                 .password(password)
                 .name(name)
+                .phone(phone)
                 .active(true)
                 .admin(true)
                 .build();
