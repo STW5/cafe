@@ -76,3 +76,54 @@
         </form>
     </li>
 </ul>
+
+<h3>재료목록</h3>
+
+<ul>
+    <li>
+        <form method="post">
+            <table>
+                <tr>
+                    <td>이름: <input type="text" name="name"></td>
+                    <td>재고: <input type="number" name="stock"></td>
+                    <td>단위:
+                        <select name="orderUnit">
+                            <option th:each="orderUnit : ${T(com.Cafe.menu.common.OrderUnit).values()}"
+                                    th:value="${orderUnit}"
+                                    th:text="${orderUnit.getDisplayName()}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit" formaction="/menu/ingredient/add">재료추가</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </li>
+    <li th:each="ingredient : ${ingredientList}">
+        <form method="post">
+            <table>
+                <tr>
+                    <td>이름: <input type="text" name="name" th:value="${ingredient.name}"></td>
+                    <td>재고: <input type="number" name="stock" th:value="${ingredient.stock}"></td>
+                    <td>단위:
+                        <select name="orderUnit">
+                            <option th:each="orderUnit : ${T(com.Cafe.menu.common.OrderUnit).values()}"
+                                    th:value="${orderUnit}"
+                                    th:text="${orderUnit.getDisplayName()}"
+                                    th:selected="${orderUnit.equals(ingredient.orderUnit)}"></option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="ingredientId" th:value="${ingredient.id}" hidden="hidden">
+                        <button type="submit" formaction="/menu/ingredient/update">수정</button>
+                        <button type="submit" formaction="/menu/ingredient/delete">삭제</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>

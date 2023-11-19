@@ -1,8 +1,11 @@
 package com.Cafe.menu.service;
 
 import com.Cafe.menu.common.Category;
+import com.Cafe.menu.common.IngredientDto;
 import com.Cafe.menu.common.MenuDto;
+import com.Cafe.menu.entity.Ingredient;
 import com.Cafe.menu.entity.Menu;
+import com.Cafe.menu.repository.IngredientRepository;
 import com.Cafe.menu.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class MenuService {
     private final MenuRepository menuRepository;
+    private final IngredientRepository ingredientRepository;
 
     public Menu createMenu(MenuDto menuDto) {
         Menu menu = menuDto.toEntity();
@@ -57,5 +61,29 @@ public class MenuService {
         }else {
             return menuRepository.findAllByCategoryAndActive(category, true);
         }
+    }
+
+    public List<Ingredient> getAllIngredients() {
+        return ingredientRepository.findAllByActive(true);
+    }
+
+    public Ingredient createIngredient(IngredientDto ingredientDto) {
+        if(ingredientRepository.existsByNameAndActive(ingredientDto.getName(), true)) return null;
+        return ingredientRepository.save(ingredientDto.toEntity());
+
+    }
+
+    @Transactional
+    public void updateIngredient(long ingredientId, IngredientDto ingredientDto) {
+        Optional<Ingredient> optionalIngredient = ingredientRepository.findById(ingredientId);
+        if (optionalIngredient.isEmpty()) return;
+        Ingredient ingredient = optionalIngredient.get();
+        ingredient.setName(ingredientDto.getName());
+        ingredient.setStock(ingredientDto.getStock());
+        ingredient.setOrderUnit(ingredientDto.getOrderUnit());
+    }
+    @Transactional
+    public void deleteIngredient(long ingredientId) {
+        ingredientRepository.findById(ingredientId).ifPresent(ingredient -> ingredient.setActive(false));
     }
 }
