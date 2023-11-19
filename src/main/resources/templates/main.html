@@ -32,17 +32,16 @@
         </thead>
         <tbody>
         <tr th:each="menu : ${menuList}">
-            <td><span th:if="${menu.isSpecial()}">[특별메뉴]</span></td>
+            <td>
+                <span th:if="${menu.isFeatured}">[대표메뉴]</span>
+                <span th:if="${menu.isRecommended}">[추천메뉴]</span>
+            </td>
             <td><a th:text="${menu.name}" th:href="@{/menu(menuId=${menu.id})}"></a></td>
             <td><span th:text="${menu.price}"></span></td>
             <td><span th:text="${menu.category.displayName}"></span></td>
             <td><form method="post">
                 <label for="menuId" hidden="hidden"></label>
                 <input type="hidden" th:value="${menu.id}" name="menuId" id="menuId">
-                <label for="quantity" hidden="hidden"></label>
-                <input th:if="${loginUser!=null}" type="number" name="quantity" id="quantity" value="1" style="width: 50px">
-                <button th:if="${loginUser!=null}" type="submit" formaction="/order/add">장바구니 담기</button>
-                <button th:if="${loginUser!=null}" type="submit" formaction="/order/order">바로 주문하기</button>
             </form></td>
         </tr>
         </tbody>

@@ -121,7 +121,7 @@ public class MenuController {
     }
 
     @PostMapping("/recipe/update")
-    public String updateRecipe(@SessionAttribute(name = "loginUser", required = false) User loginUser, long recipeId, long requiredAmount, HttpServletRequest httpServletRequest){
+    public String updateupdateRecipe(@SessionAttribute(name = "loginUser", required = false) User loginUser, long recipeId, long requiredAmount, HttpServletRequest httpServletRequest){
         if(loginUser==null)return "redirect:/user/login";
         if(!loginUser.isAdmin()) return "redirect:/";
         menuService.updateRecipe(recipeId, requiredAmount);

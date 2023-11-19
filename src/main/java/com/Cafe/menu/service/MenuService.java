@@ -44,7 +44,8 @@ public class MenuService {
         menu.setName(menuDto.getName());
         menu.setPrice(menuDto.getPrice());
         menu.setCategory(menuDto.getCategory());
-        menu.setSpecial(menuDto.isSpecial());
+        menu.setFeatured(menuDto.isFeatured());
+        menu.setRecommended(menuDto.isRecommended());
     }
 
     @Transactional

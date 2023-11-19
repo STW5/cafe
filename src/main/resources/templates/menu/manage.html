@@ -54,12 +54,20 @@
                                     th:selected="${category.equals(menu.category)}"></option>
                         </select>
                     </td>
-                    <td>스페셜메뉴 여부:
-                        <select name="special">
-                            <option th:value="${false}" th:selected="${!menu.special}">선택안함</option>
-                            <option th:value="${true}" th:selected="${menu.special}">특별메뉴</option>
+                    <td>대표 메뉴 여부:
+                        <select name="featured">
+                        <option th:value="${false}" th:selected="${!menu.featured}">선택안함</option>
+                        <option th:value="${true}" th:selected="${menu.featured}">대표메뉴</option>
                         </select>
                     </td>
+                    <td>
+                        추천 메뉴 여부:
+                        <select name="recommended">
+                            <option th:value="${false}" th:selected="${!menu.recommended}">선택안함</option>
+                            <option th:value="${true}" th:selected="${menu.recommended}">추천메뉴</option>
+                        </select>
+                    </td>
+
                     <td>
                         <input type="text" name="menuId" th:value="${menu.id}" hidden="hidden">
                         <button type="submit" formaction="/menu/update">수정</button>

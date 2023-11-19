@@ -9,7 +9,9 @@ import lombok.Setter;
 public class MenuDto {
     private String name;
     private long price;
-    private boolean special;
+    private boolean featured;
+    private boolean recommended;
+    //private boolean special;
     private Category category;
 
     // dto -> entity
@@ -18,7 +20,8 @@ public class MenuDto {
                 .name(name)
                 .price(price)
                 .active(true)
-                .special(special)
+                .featured(featured)
+                .recommended(recommended)
                 .category(category)
                 .build();
     }
