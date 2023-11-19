@@ -76,7 +76,7 @@ public class OrderService {
             totalAmount += orderMenu.getQuantity()*orderMenu.getMenu().getPrice();
             //if (!menuService.checkStockAvailable(orderMenu)) return null;
         }
-        //order.getOrderMenus().forEach(menuService::subIngredientStock);
+        order.getOrderMenus().forEach(menuService::subIngredientStock);
 
         order.setTotalAmount(totalAmount);
         order.setPaymentMethod(paymentMethod);
@@ -117,7 +117,6 @@ public class OrderService {
 
     private List<Order> processConfirmCartOrder(PaymentMethod paymentMethod, List<Order> orderList) {
         if (orderList.isEmpty()) return null;
-        List<Order> confirmedOrders = new ArrayList<>();
         for (Order order : orderList) {
             long totalAmount = 0L;
             // 주문 항목을 다시 불러와서 새로운 총 금액을 계산
@@ -125,6 +124,7 @@ public class OrderService {
             for (OrderMenu orderMenu : orderMenus) {
                 totalAmount += orderMenu.getQuantity()*orderMenu.getMenu().getPrice();
             }
+            orderMenus.forEach(menuService::subIngredientStock);
 
             order.setTotalAmount(totalAmount);
             order.setPaymentMethod(paymentMethod);

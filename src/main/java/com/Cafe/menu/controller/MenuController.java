@@ -2,6 +2,7 @@ package com.Cafe.menu.controller;
 
 import com.Cafe.menu.common.IngredientDto;
 import com.Cafe.menu.common.MenuDto;
+import com.Cafe.menu.common.RecipeDto;
 import com.Cafe.menu.entity.Ingredient;
 import com.Cafe.menu.entity.Menu;
 import com.Cafe.menu.service.MenuService;
@@ -94,5 +95,45 @@ public class MenuController {
     }
 
     // 레시피 처리
+    @GetMapping("/recipe")
+    public String recipe(@RequestParam("menuId") Long menuId, @SessionAttribute(name = "loginUser", required = false) User loginUser, Model model){
+        if(loginUser==null)return "redirect:/user/login";
+        if(!loginUser.isAdmin()) return "redirect:/";
+        model.addAttribute("loginUser", loginUser);
+
+        Menu menu = menuService.getMenuById(menuId);
+        if(menu==null) return "redirect:/menu/manage";
+
+        List<Ingredient> ingredientList = menuService.getAllIngredients();
+
+        model.addAttribute("ingredientList", ingredientList);
+        model.addAttribute("menu", menu);
+
+        return "menu/recipe";
+    }
+
+    @PostMapping("/recipe/add")
+    public String createRecipe(@SessionAttribute(name = "loginUser", required = false) User loginUser, RecipeDto recipeDto, HttpServletRequest httpServletRequest){
+        if(loginUser==null)return "redirect:/user/login";
+        if(!loginUser.isAdmin()) return "redirect:/";
+        menuService.createRecipe(recipeDto);
+        return "redirect:"+httpServletRequest.getHeader("Referer");
+    }
+
+    @PostMapping("/recipe/update")
+    public String updateRecipe(@SessionAttribute(name = "loginUser", required = false) User loginUser, long recipeId, long requiredAmount, HttpServletRequest httpServletRequest){
+        if(loginUser==null)return "redirect:/user/login";
+        if(!loginUser.isAdmin()) return "redirect:/";
+        menuService.updateRecipe(recipeId, requiredAmount);
+        return "redirect:"+httpServletRequest.getHeader("Referer");
+    }
+
+    @PostMapping("/recipe/delete")
+    public String removeRecipe(@SessionAttribute(name = "loginUser", required = false) User loginUser, long recipeId, HttpServletRequest httpServletRequest){
+        if(loginUser==null)return "redirect:/user/login";
+        if(!loginUser.isAdmin()) return "redirect:/";
+        menuService.deleteRecipe(recipeId);
+        return "redirect:"+httpServletRequest.getHeader("Referer");
+    }
 
 }

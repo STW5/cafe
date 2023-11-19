@@ -3,10 +3,14 @@ package com.Cafe.menu.service;
 import com.Cafe.menu.common.Category;
 import com.Cafe.menu.common.IngredientDto;
 import com.Cafe.menu.common.MenuDto;
+import com.Cafe.menu.common.RecipeDto;
 import com.Cafe.menu.entity.Ingredient;
 import com.Cafe.menu.entity.Menu;
+import com.Cafe.menu.entity.Recipe;
 import com.Cafe.menu.repository.IngredientRepository;
 import com.Cafe.menu.repository.MenuRepository;
+import com.Cafe.menu.repository.RecipeRepository;
+import com.Cafe.order.entity.OrderMenu;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ import java.util.Optional;
 public class MenuService {
     private final MenuRepository menuRepository;
     private final IngredientRepository ingredientRepository;
+    private final RecipeRepository recipeRepository;
 
     public Menu createMenu(MenuDto menuDto) {
         Menu menu = menuDto.toEntity();
@@ -85,5 +90,41 @@ public class MenuService {
     @Transactional
     public void deleteIngredient(long ingredientId) {
         ingredientRepository.findById(ingredientId).ifPresent(ingredient -> ingredient.setActive(false));
+    }
+
+    public Recipe createRecipe(RecipeDto recipeDto) {
+        Optional<Menu> optionalMenu = menuRepository.findById(recipeDto.getMenuId());
+        if (optionalMenu.isEmpty()) {
+            return null;
+        }
+        Menu menu = optionalMenu.get();
+        Optional<Ingredient> optionalIngredient = ingredientRepository.findById(recipeDto.getIngredientId());
+        if (optionalIngredient.isEmpty()) {
+            return null;
+        }
+        Ingredient ingredient = optionalIngredient.get();
+
+        Recipe recipe = new Recipe();
+        recipe.setRequiredAmount(recipeDto.getRequiredAmount());
+        recipe.setMenu(menu);
+        recipe.setIngredient(ingredient);
+        return recipeRepository.save(recipe);
+    }
+
+    @Transactional
+    public void updateRecipe(long recipeId, long requiredAmount) {
+        recipeRepository.findById(recipeId).ifPresent(recipe -> recipe.setRequiredAmount(requiredAmount));
+    }
+
+    @Transactional
+    public void deleteRecipe(long recipeId) {
+        recipeRepository.deleteById(recipeId);
+    }
+    //주문할때 마다 재료 재고량 소진되는 기능 구현 메서드
+    public void subIngredientStock(OrderMenu orderMenu) {
+        for (Recipe recipe : orderMenu.getMenu().getRecipes()) {
+            Ingredient ingredient = recipe.getIngredient();
+            ingredient.setStock(ingredient.getStock() - recipe.getRequiredAmount() * orderMenu.getQuantity());
+        }
     }
 }

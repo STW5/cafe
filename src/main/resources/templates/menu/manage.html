@@ -54,22 +54,17 @@
                                     th:selected="${category.equals(menu.category)}"></option>
                         </select>
                     </td>
-                    <!--                    <td>-->
-                    <!--                        스페셜메뉴 여부:-->
-                    <!--                        <input th:if="${menu.special}" type="checkbox" name="special" checked>-->
-                    <!--                        <input th:unless="${menu.special}" type="checkbox" name="special">-->
-                    <!--                    </td>-->
-<!--                    <td>스페셜메뉴 여부:-->
-<!--                        <select name="special">-->
-<!--                            <option th:value="${false}" th:selected="${!menu.special}">선택안함</option>-->
-<!--                            <option th:value="${true}" th:selected="${menu.special}">특별메뉴</option>-->
-<!--                        </select>-->
-<!--                    </td>-->
+                    <td>스페셜메뉴 여부:
+                        <select name="special">
+                            <option th:value="${false}" th:selected="${!menu.special}">선택안함</option>
+                            <option th:value="${true}" th:selected="${menu.special}">특별메뉴</option>
+                        </select>
+                    </td>
                     <td>
                         <input type="text" name="menuId" th:value="${menu.id}" hidden="hidden">
                         <button type="submit" formaction="/menu/update">수정</button>
                         <button type="submit" formaction="/menu/delete">삭제</button>
-<!--                        <a th:href="@{/menu/recipe(menuId = ${menu.id})}">레시피관리</a>-->
+                        <a th:href="@{/menu/recipe(menuId = ${menu.id})}">레시피관리</a>
                     </td>
                 </tr>
             </table>
