@@ -50,4 +50,10 @@ public class OrderController {
         return "order/list";
     }
 
+    @GetMapping("/monthRankList")
+    public String monthRankList(@SessionAttribute(name = "loginUser", required = false) User loginUser, Model model) {
+
+        return null;
+    }
+
 }

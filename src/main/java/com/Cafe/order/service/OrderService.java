@@ -136,11 +136,9 @@ public class OrderService {
         return null;
     }
 
-
-//    @Transactional
-//    public void processOrder(Long userId, List<CartMenu> cartMenuList, PaymentMethod paymentMethod) {
-//        createCartOrder(userId, cartMenuList);
-//        confirmCartOrder(userId, paymentMethod);
-//    }
+    // 판매량에 따른 순차매김 메서드
+    public List<Object[]> findTopMenuByQuantity() {
+        return orderMenuRepository.findTopMenuByQuantity();
+    }
 
 }

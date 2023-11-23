@@ -11,6 +11,8 @@ import com.Cafe.menu.repository.IngredientRepository;
 import com.Cafe.menu.repository.MenuRepository;
 import com.Cafe.menu.repository.RecipeRepository;
 import com.Cafe.order.entity.OrderMenu;
+import com.Cafe.supply.common.SupplyIngredientDto;
+import com.Cafe.supply.service.SupplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -121,7 +123,9 @@ public class MenuService {
     public void deleteRecipe(long recipeId) {
         recipeRepository.deleteById(recipeId);
     }
-    //주문할때 마다 재료 재고량 소진되는 기능 구현 메서드
+
+
+    //주문할 때 마다 재료 재고량 소진 되는 기능 구현 메서드
     public void subIngredientStock(OrderMenu orderMenu) {
         for (Recipe recipe : orderMenu.getMenu().getRecipes()) {
             Ingredient ingredient = recipe.getIngredient();

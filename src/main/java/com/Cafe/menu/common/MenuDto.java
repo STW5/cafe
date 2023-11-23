@@ -11,7 +11,6 @@ public class MenuDto {
     private long price;
     private boolean featured;
     private boolean recommended;
-    //private boolean special;
     private Category category;
 
     // dto -> entity

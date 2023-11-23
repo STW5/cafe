@@ -18,6 +18,31 @@
         <input type="submit" value="검색">
     </fieldset>
 </form>
+
+<h2 style="display: inline; margin: 30px; text-align: center">최대 누적 판매 메뉴항목</h2>
+<div th:if="${!topMenuByQuantity.isEmpty()}">
+    <table>
+        <thead>
+        <tr>
+            <th>순위</th>
+            <th>상품명</th>
+            <th>판매량</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="menuData, stat : ${topMenuByQuantity}" th:if="${stat.count <= 2}">
+            <td><span th:text="${stat.count}"></span></td>
+            <td><a th:text="${menuData[0].name}" th:href="@{/menu(menuId=${menuData[0].id})}"></a></td>
+            <td><span th:text="${menuData[1]}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${!topMenuByQuantity.isEmpty()}">
+    <h4>상품이 존재하지 않습니다. </h4>
+</div>
+
+
 <h2 style="display: inline; margin: 30px; text-align: center">상품목록</h2>
 <div th:if="${!menuList.isEmpty()}">
     <table>
