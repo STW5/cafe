@@ -33,4 +33,19 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
         return optionalUser.orElse(null);
     }
+
+    public void updateUserGrade(User user) {
+        long totalAmount = user.getTotalAmount();
+        if (totalAmount >= 50000) {
+            user.setGrade("Gold");
+        } else if (totalAmount >= 30000) {
+            user.setGrade("Silver");
+        } else if (totalAmount >= 10000) {
+            user.setGrade("Bronze");
+        } else {
+            user.setGrade(null);
+        }
+        userRepository.save(user);
+    }
+
 }

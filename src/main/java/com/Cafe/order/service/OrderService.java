@@ -16,9 +16,7 @@ import com.Cafe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,26 +63,57 @@ public class OrderService {
         User user = userService.getUserById(userId);
         if(user == null) return null;
         Optional<Order> optionalOrder = orderRepository.findOneByUserAndOrderState(user, OrderState.PREPARING);
-        return processConfirmOrder(paymentMethod, optionalOrder);
+        return processConfirmOrder(paymentMethod, optionalOrder, userId);
     }
 
-    private Order processConfirmOrder(PaymentMethod paymentMethod, Optional<Order> optionalOrder) {
+    private Order processConfirmOrder(PaymentMethod paymentMethod, Optional<Order> optionalOrder, Long userId) {
         if (optionalOrder.isEmpty()) return null;
         Order order = optionalOrder.get();
         long totalAmount = 0L;
         for (OrderMenu orderMenu : order.getOrderMenus()) {
             totalAmount += orderMenu.getQuantity()*orderMenu.getMenu().getPrice();
-            //if (!menuService.checkStockAvailable(orderMenu)) return null;
         }
         order.getOrderMenus().forEach(menuService::subIngredientStock);
+
+        // User 정보 찾기
+        User user = userRepository.findById(userId).orElse(null);
+        if(user != null) {
+            // 등급에 따른 할인율 적용
+            String grade = user.getGrade();
+            long discountAmount = 0L;
+            if ("Gold".equals(grade)) {
+                discountAmount = (long)(totalAmount * 0.2); // 20% 할인
+                totalAmount *= 0.8;
+            } else if ("Silver".equals(grade)) {
+                discountAmount = (long)(totalAmount * 0.1); // 10% 할인
+                totalAmount *= 0.9;
+            } else if ("Bronze".equals(grade)) {
+                discountAmount = (long)(totalAmount * 0.05); // 5% 할인
+                totalAmount *= 0.95;
+            }
+
+            // 할인 금액을 discountAmount에 저장
+            order.setDiscountAmount(discountAmount);
+
+            // 기존 금액에 누적해서 총 주문금액 저장
+            long currentTotalAmount = user.getTotalAmount();
+            user.setTotalAmount(currentTotalAmount + totalAmount); // 기존 금액에 새로운 주문금액 더하기
+
+            userRepository.save(user);
+
+            // 사용자 등급 업데이트
+            userService.updateUserGrade(user);
+        } else {
+            return null;
+        }
 
         order.setTotalAmount(totalAmount);
         order.setPaymentMethod(paymentMethod);
         order.setOrderedTime(LocalDateTime.now());
         order.setOrderState(OrderState.ORDER);
+
         return orderRepository.save(order);
     }
-
 
     public void createCartOrder(Long userId, List<CartMenu> cartMenuList){
         Optional<User> userOptional = userRepository.findById(userId);
@@ -112,11 +141,16 @@ public class OrderService {
         User user = userService.getUserById(userId);
         if(user == null) return null;
         List<Order> orderList = orderRepository.findByUserAndOrderState(user, OrderState.PREPARING);
-        return processConfirmCartOrder(paymentMethod, orderList);
+        return processConfirmCartOrder(paymentMethod, orderList, userId);
     }
 
-    private List<Order> processConfirmCartOrder(PaymentMethod paymentMethod, List<Order> orderList) {
+    private List<Order> processConfirmCartOrder(PaymentMethod paymentMethod, List<Order> orderList, Long userId) {
         if (orderList.isEmpty()) return null;
+
+        // User 정보 찾기
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) return null;
+
         for (Order order : orderList) {
             long totalAmount = 0L;
             // 주문 항목을 다시 불러와서 새로운 총 금액을 계산
@@ -126,19 +160,47 @@ public class OrderService {
             }
             orderMenus.forEach(menuService::subIngredientStock);
 
+            // 등급에 따른 할인율 적용
+            String grade = user.getGrade();
+            long discountAmount = 0L;
+            if ("Gold".equals(grade)) {
+                discountAmount = (long)(totalAmount * 0.2); // 20% 할인
+                totalAmount *= 0.8;
+            } else if ("Silver".equals(grade)) {
+                discountAmount = (long)(totalAmount * 0.1); // 10% 할인
+                totalAmount *= 0.9;
+            } else if ("Bronze".equals(grade)) {
+                discountAmount = (long)(totalAmount * 0.05); // 5% 할인
+                totalAmount *= 0.95;
+            }
+
+            // 할인 금액을 discountAmount에 저장
+            order.setDiscountAmount(discountAmount);
+
+            // 기존 금액에 누적해서 총 주문금액 저장
+            long currentTotalAmount = user.getTotalAmount();
+            user.setTotalAmount(currentTotalAmount + totalAmount); // 기존 금액에 새로운 주문금액 더하기
+
+            // 사용자 등급 업데이트
+            userService.updateUserGrade(user);
+            userRepository.save(user);
+
             order.setTotalAmount(totalAmount);
             order.setPaymentMethod(paymentMethod);
             order.setOrderedTime(LocalDateTime.now());
             order.setOrderState(OrderState.ORDER);
             orderRepository.save(order);
         }
-
-        return null;
+        return orderList;
     }
+
 
     // 판매량에 따른 순차매김 메서드
     public List<Object[]> findTopMenuByQuantity() {
         return orderMenuRepository.findTopMenuByQuantity();
     }
+
+
+
 
 }

@@ -27,6 +27,7 @@ public class Menu extends BaseEntity {
     @Column
     private boolean recommended;
 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private Category category;

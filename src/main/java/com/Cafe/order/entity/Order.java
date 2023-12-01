@@ -24,12 +24,15 @@ public class Order extends BaseEntity {
     private LocalDateTime orderedTime;
 
     private long totalAmount;
+    private long discountAmount;
 
     @Enumerated(EnumType.STRING)
     private OrderState orderState;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")

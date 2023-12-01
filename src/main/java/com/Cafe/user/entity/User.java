@@ -31,4 +31,10 @@ public class User extends BaseEntity {
     private boolean active;
     @Column
     private boolean admin;
+
+    @Column
+    private String grade;
+
+    @Column
+    private long totalAmount;
 }

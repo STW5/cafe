@@ -136,4 +136,6 @@ public class MenuService {
     public void addIngredientStock(Ingredient ingredient, long stock) {
         ingredient.setStock(ingredient.getStock() + stock);
     }
+
+
 }
