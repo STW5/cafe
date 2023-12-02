@@ -136,6 +136,16 @@ public class MenuController {
         return "redirect:"+httpServletRequest.getHeader("Referer");
     }
 
+    @PostMapping("/like/toggle")
+    public String addLike(@SessionAttribute(name = "loginUser", required = false) User loginUser, long menuId, HttpServletRequest httpServletRequest) {
+        if(loginUser == null) {
+            return "redirect:/user/login";
+        }
+
+        menuService.addLike(loginUser, menuId);
+        return "redirect:"+httpServletRequest.getHeader("Referer");
+    }
+
 
 
 }

@@ -26,6 +26,8 @@ public class Menu extends BaseEntity {
     private boolean featured;
     @Column
     private boolean recommended;
+    @Column
+    private long likeCount = 0L;
 
 
     @Enumerated(EnumType.STRING)

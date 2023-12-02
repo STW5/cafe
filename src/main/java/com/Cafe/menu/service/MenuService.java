@@ -5,14 +5,15 @@ import com.Cafe.menu.common.IngredientDto;
 import com.Cafe.menu.common.MenuDto;
 import com.Cafe.menu.common.RecipeDto;
 import com.Cafe.menu.entity.Ingredient;
+import com.Cafe.menu.entity.LikeMenu;
 import com.Cafe.menu.entity.Menu;
 import com.Cafe.menu.entity.Recipe;
 import com.Cafe.menu.repository.IngredientRepository;
+import com.Cafe.menu.repository.LikeMenuRepository;
 import com.Cafe.menu.repository.MenuRepository;
 import com.Cafe.menu.repository.RecipeRepository;
 import com.Cafe.order.entity.OrderMenu;
-import com.Cafe.supply.common.SupplyIngredientDto;
-import com.Cafe.supply.service.SupplyService;
+import com.Cafe.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
+    private final LikeMenuRepository likeMenuRepository;
 
     public Menu createMenu(MenuDto menuDto) {
         Menu menu = menuDto.toEntity();
@@ -136,6 +138,31 @@ public class MenuService {
     public void addIngredientStock(Ingredient ingredient, long stock) {
         ingredient.setStock(ingredient.getStock() + stock);
     }
+
+    public void addLike(User user, long menuid) {
+        Menu menu = menuRepository.findById(menuid).orElse(null);
+        LikeMenu likeMenu = likeMenuRepository.findByUserAndMenu(user, menu);
+
+        if (likeMenu == null) {
+            likeMenu = LikeMenu.builder()
+                    .user(user)
+                    .menu(menu)
+                    .status(true)
+                    .build();
+            menu.setLikeCount(menu.getLikeCount() + 1);
+        } else {
+            if (likeMenu.isStatus()) {
+                likeMenu.setStatus(false);
+                menu.setLikeCount(menu.getLikeCount() - 1);
+            } else {
+                likeMenu.setStatus(true);
+                menu.setLikeCount(menu.getLikeCount() + 1);
+            }
+        }
+
+        likeMenuRepository.save(likeMenu);
+    }
+
 
 
 }
