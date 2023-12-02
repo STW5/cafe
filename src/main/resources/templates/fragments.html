@@ -9,6 +9,7 @@
             <a th:href="@{/user/logout}">로그아웃</a>
             <a th:href="@{/cart/list}">장바구니</a>
             <a th:href="@{/order/list}">내 주문</a>
+            <a th:href="@{/menu/like/list}">좋아요 목록</a>
             <a th:if="${loginUser.admin == true}" th:href="@{/menu/manage}">메뉴관리</a>
             <a th:if="${loginUser.admin == true}" th:href="@{/supply/supplier}">공급관리</a>
         </div>

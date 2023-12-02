@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,8 +140,8 @@ public class MenuService {
         ingredient.setStock(ingredient.getStock() + stock);
     }
 
-    public void addLike(User user, long menuid) {
-        Menu menu = menuRepository.findById(menuid).orElse(null);
+    public void addLike(User user, long menuId) {
+        Menu menu = menuRepository.findById(menuId).orElse(null);
         LikeMenu likeMenu = likeMenuRepository.findByUserAndMenu(user, menu);
 
         if (likeMenu == null) {
@@ -163,6 +164,20 @@ public class MenuService {
         likeMenuRepository.save(likeMenu);
     }
 
+    public List<Menu> getLikedMenus(User user) {
+        List<LikeMenu> likedMenus = likeMenuRepository.findByUserAndStatus(user, true);
+        List<Menu> menus = new ArrayList<>();
+
+        for (LikeMenu likeMenu : likedMenus) {
+            menus.add(likeMenu.getMenu());
+        }
+
+        return menus;
+    }
 
 
+    public LikeMenu getLikeMenu(Long menuId, User loginUser) {
+        Menu menu = menuRepository.findById(menuId).orElse(null);
+        return likeMenuRepository.findByUserAndMenu(loginUser, menu);
+    }
 }

@@ -4,6 +4,7 @@ import com.Cafe.menu.common.IngredientDto;
 import com.Cafe.menu.common.MenuDto;
 import com.Cafe.menu.common.RecipeDto;
 import com.Cafe.menu.entity.Ingredient;
+import com.Cafe.menu.entity.LikeMenu;
 import com.Cafe.menu.entity.Menu;
 import com.Cafe.menu.service.MenuService;
 import com.Cafe.user.entity.User;
@@ -63,9 +64,12 @@ public class MenuController {
     @GetMapping
     public String menuInfo(@RequestParam("menuId") Long menuId, @SessionAttribute(name = "loginUser", required = false) User loginUser, Model model){
         Menu menu = menuService.getMenuById(menuId);
+        LikeMenu likeMenu = menuService.getLikeMenu(menuId, loginUser);
         if(loginUser!=null)model.addAttribute(loginUser);
+
         model.addAttribute("loginUser", loginUser);
         model.addAttribute("menu", menu);
+        model.addAttribute("likeMenu", likeMenu);
         return "menu/info";
     }
 
@@ -146,6 +150,18 @@ public class MenuController {
         return "redirect:"+httpServletRequest.getHeader("Referer");
     }
 
+    @GetMapping("/like/list")
+    public String addLike(@SessionAttribute(name = "loginUser", required = false) User loginUser, Model model, HttpServletRequest httpServletRequest) {
+        if (loginUser == null) {
+            return "redirect:/user/login";
+        }
+        model.addAttribute("loginUser", loginUser);
+
+        List<Menu> menus = menuService.getLikedMenus(loginUser);
+        model.addAttribute("menu", menus);
+
+        return "menu/likeList";
+    }
 
 
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>좋아요 목록</title>
+</head>
+<body>
+<div th:insert="~{fragments :: headerFragment}"></div>
+
+<div th:if="${!menu.isEmpty()}">
+    <ul>
+        <li th:each="menu : ${menu}">
+            <td>
+                <a th:text="${menu.name}" th:href="@{/menu(menuId=${menu.id})}"></a>
+                <span th:text="|가격: ${menu.price}원|"></span>
+            </td>
+
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
